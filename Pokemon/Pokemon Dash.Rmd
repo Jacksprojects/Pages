@@ -1,0 +1,363 @@
+---
+title: "Pokemon Dash"
+author: "Jack Quarm"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    theme: united
+    logo: logo.png
+    favicon: logo.png
+---
+
+Introduction
+===================================== 
+
+Row
+-------------------------------------
+    
+### Our Pokemon Database
+```{r}
+# load packages
+library(dplyr)
+library(ggplot2)
+library(psych)
+library(fmsb)
+library(reactable)
+library(plotly)
+library(crosstalk)
+
+setwd("C:/Users/Sophia/Desktop/R code/Pokemon")
+# load data
+pokemon <- read.csv("C:/Users/Sophia/Python Stuff/Data analysis/pokemon.csv", stringsAsFactors=FALSE)
+
+# create sum all stats
+pokemon$Total <- pokemon[,5] + pokemon[,6] + pokemon[,7] + pokemon[,8] + pokemon[,9] + pokemon[,10] 
+
+data <- SharedData$new(pokemon)
+
+bscols(
+  widths = c(2, 10),
+  list(
+    filter_checkbox("legendary", "Show Legendaries?", data, ~Legendary),
+    filter_slider("total", "Total Power", data, ~Total, width = "100%"),
+    filter_select("type", "Pokemon Type", data, ~Type.1)
+  ),
+  reactable(data, bordered = TRUE, highlight = TRUE, compact = TRUE,searchable =TRUE, defaultPageSize = 8)
+)
+
+
+```
+   
+Row
+-------------------------------------
+    
+### Distribution of Pokemon Types 
+    
+```{r}
+# distibution of pokemon types
+df <- pokemon
+df <- df %>% group_by(Type.1)
+df <- df %>% summarize(count = n())
+fig <- df %>% plot_ly(labels = ~Type.1, values = ~count)
+fig <- fig %>% add_pie(hole = 0.6)
+fig <- fig %>% layout(title = "Distribution of Pokemon Types",  showlegend = T,
+                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+                      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE))
+fig
+```
+    
+### Distribution of Pokemon Generations
+
+```{r}
+# distibution of pokemon generations
+df <- pokemon
+df <- df %>% group_by(Generation)
+df <- df %>% summarize(count = n())
+fig2 <- df %>% plot_ly(labels = ~Generation, values = ~count)
+fig2 <- fig2 %>% add_pie(hole = 0.6)
+fig2 <- fig2 %>% layout(title = "Distribution of Pokemon Generations",  showlegend = T,
+                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE),
+                      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = TRUE))
+fig2
+```
+
+
+Pokemon Types {data-orientation=rows, data-icon="fa-list"}
+===================================== 
+
+Row {data-height=500}
+-------------------------------------
+
+### Median total power level {.no-padding}
+    
+```{r, fig.width=10, fig.align='center'}
+# group by type, then order by the median total stat
+grouped <- pokemon[, 3:13] %>%
+  group_by(Type.1) %>%
+  mutate(medianTotal = median(Total)) %>%
+  arrange(medianTotal)
+
+# create a vector of levels to order the plot by
+vectortot <- unique(grouped$Type.1)
+
+# call the type factor using the custom levels
+totalplot<- ggplot(data = grouped, aes(x = factor(Type.1, levels = vectortot), y = Total, fill = Type.1)) +
+  geom_boxplot() +
+  xlab("Pokemon Type") +
+  ylab("Median total of power stats") + 
+  ggtitle("Median total power level of different pokemon types")
+
+strongest<-pokemon %>%
+  arrange(desc(Total))
+
+strongest <- strongest[1:5, ]
+
+weakest<-pokemon %>%
+  arrange(Total)
+
+weakest <- weakest[1:5, ]
+
+totalplot
+```
+ 
+Row {data-height=500}
+-------------------------------------
+
+### Median total attack level 
+
+```{r, fig.width=10, fig.align='center'}
+pokemon$Total <- NULL
+
+# create sum all ATK stats
+pokemon$TotalAtk <- pokemon[,6] + pokemon[,8] 
+
+# group by type, then order by the median total stat
+grouped <- pokemon[, 3:13] %>%
+  group_by(Type.1) %>%
+  mutate(medianTotal = median(TotalAtk)) %>%
+  arrange(medianTotal)
+
+# create a vector of levels to order the plot by
+vectoratk <- unique(grouped$Type.1)
+
+# call the type factor using the custom levels
+atkplot<- ggplot(data = grouped, aes(x = factor(Type.1, levels = vectoratk), y = TotalAtk, fill = Type.1)) +
+  geom_boxplot() +
+  xlab("Pokemon Type") +
+  ylab("Median total of ATK stats") + 
+  ggtitle("Median total ATK stat of different pokemon types")
+
+atkplot
+```
+
+### Median total defense level
+
+```{r, fig.width=10, fig.align='center'}
+pokemon$TotalAtk <- NULL
+
+# create sum all ATK stats
+pokemon$TotalDef <- pokemon[,7] + pokemon[,9] 
+
+# group by type, then order by the median total stat
+grouped <- pokemon[, 3:13] %>%
+  group_by(Type.1) %>%
+  mutate(medianTotal = median(TotalDef)) %>%
+  arrange(medianTotal)
+
+# create a vector of levels to order the plot by
+vectordef <- unique(grouped$Type.1)
+
+# call the type factor using the custom levels
+defplot<- ggplot(data = grouped, aes(x = factor(Type.1, levels = vectordef), y = TotalDef, fill = Type.1)) +
+  geom_boxplot() +
+  xlab("Pokemon Type") +
+  ylab("Median total of DEF stats") + 
+  ggtitle("Median total DEF stat of different pokemon types")
+
+defplot
+```
+
+The Top 5 {data-orientation=rows, data-icon="fa-thumbs-up"}
+===================================== 
+
+Row {data-height=650}
+-------------------------------------
+
+### The 5 Strongest Pokemon
+
+```{r}
+
+fig3 <- plot_ly(
+  type = 'scatterpolar',
+  fill = 'toself'
+) 
+fig3 <- fig3 %>%
+  add_trace(
+    r = c(105, 180, 100, 180, 100, 115),
+    theta = names(pokemon[, 5:10]),
+    name = 'Rayquaza Mega #384 - Dragon'
+  ) 
+fig3 <- fig3 %>%
+  add_trace(
+    r = c(106, 150, 70, 194, 120, 140),
+    theta = names(pokemon[, 5:10]),
+    name = 'Mewtwo Mega Y #150 - Psychic'
+  ) 
+fig3 <- fig3 %>%
+  add_trace(
+    r = c(106, 190, 100, 154, 100, 130),
+    theta = names(pokemon[, 5:10]),
+    name = 'Mewtwo Mega X #150 - Psychic'
+  ) 
+fig3 <- fig3 %>%
+  add_trace(
+    r = c(100, 180, 160, 150, 90, 90),
+    theta = names(pokemon[, 5:10]),
+    name = 'Groudon Primal #383 - Ground'
+  ) 
+fig3 <- fig3 %>%
+  add_trace(
+    r = c(100, 150, 90, 180, 160, 90),
+    theta = names(pokemon[, 5:10]),
+    name = 'Kyogre Primal #382 - Water'
+  ) 
+fig3 <- fig3 %>%
+  layout(
+    polar = list(
+      radialaxis = list(
+        visible = T,
+        range = c(0,200)
+      )
+    )
+  )
+
+fig3
+```
+
+Row {data-height=350}
+-------------------------------------
+
+### Pokemon Data
+
+```{r}
+reactable(strongest, compact = TRUE)
+
+```
+
+
+The Worst 5 {data-orientation=rows, data-icon="fa-thumbs-down"}
+===================================== 
+
+Row {data-height=650}
+-------------------------------------
+
+### The 5 Weakest Pokemon
+
+```{r}
+fig4 <- plot_ly(
+  type = 'scatterpolar',
+  fill = 'toself'
+) 
+fig4 <- fig4 %>%
+  add_trace(
+    r = c(30, 30, 30, 30, 30, 30),
+    theta = names(pokemon[, 5:10]),
+    name = 'Sunkern #191 - Grass'
+  ) 
+fig4 <- fig4 %>%
+  add_trace(
+    r = c(50, 20, 40, 20, 40, 20),
+    theta = names(pokemon[, 5:10]),
+    name = 'Azurill #298 - Normal'
+  ) 
+fig4 <- fig4 %>%
+  add_trace(
+    r = c(37, 25, 41, 25, 41, 25),
+    theta = names(pokemon[, 5:10]),
+    name = 'Kriketot #298 - Bug'
+  ) 
+fig4 <- fig4 %>%
+  add_trace(
+    r = c(45, 30, 35, 20, 20, 45),
+    theta = names(pokemon[, 5:10]),
+    name = 'Caterpie #10 - Bug'
+  ) 
+fig4 <- fig4 %>%
+  add_trace(
+    r = c(40, 35, 30, 20, 20, 50),
+    theta = names(pokemon[, 5:10]),
+    name = 'Weedle #13 - Bug'
+  ) 
+fig4 <- fig4 %>%
+  layout(
+    polar = list(
+      radialaxis = list(
+        visible = T,
+        range = c(0,60)
+      )
+    )
+  )
+
+fig4
+```
+
+Row {data-height=350}
+-------------------------------------
+
+### Pokemon Data
+
+```{r}
+reactable(weakest, compact = TRUE)
+```
+
+
+Legendary Pokemon {data-orientation=rows, data-icon="fa-star"}
+===================================== 
+
+```{r}
+df <- pokemon
+
+axis = list(showline=FALSE,
+            zeroline=FALSE,
+            gridcolor='#ffff',
+            ticklen=4)
+
+fig5 <- df %>%
+  plot_ly() 
+fig5 <- fig5 %>%
+  add_trace(
+    type = 'splom',
+    dimensions = list(
+      list(label='Attack Stats', values=~Attack),
+      list(label='Defense Stats', values=~Defense),
+      list(label='HP Stats', values=~HP),
+      list(label='Speed', values=~Speed)
+    ),
+    text=~Legendary,
+    marker = list(
+      color = as.integer(df$Legendary),
+      size = 7,
+      line = list(
+        width = 1,
+        color = 'rgb(230,230,230)'
+      )
+    )
+  ) 
+fig5 <- fig5 %>%
+  layout(
+    title= 'Difference Between Regular and Legendary Pokemon',
+    hovermode='closest',
+    dragmode= 'select',
+    plot_bgcolor='rgba(240,240,240, 0.95)',
+    xaxis=list(domain=NULL, showline=F, zeroline=F, gridcolor='#ffff', ticklen=4),
+    yaxis=list(domain=NULL, showline=F, zeroline=F, gridcolor='#ffff', ticklen=4),
+    xaxis2=axis,
+    xaxis3=axis,
+    xaxis4=axis,
+    yaxis2=axis,
+    yaxis3=axis,
+    yaxis4=axis
+  )
+
+fig5
+```
