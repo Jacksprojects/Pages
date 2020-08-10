@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>43 Data Slicing | Analysis Notes</title>
+  <meta name="description" content="43 Data Slicing | Analysis Notes" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="43 Data Slicing | Analysis Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="43 Data Slicing | Analysis Notes" />
+  
+  
+  
+
+<meta name="author" content="Jack Quarm 21/03/20" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="the-caret-package.html"/>
+<link rel="next" href="training-options.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction-to-stats-expected-values.html"><a href="introduction-to-stats-expected-values.html"><i class="fa fa-check"></i><b>1</b> Introduction to Stats: Expected values</a></li>
+<li class="chapter" data-level="2" data-path="example-population-mean.html"><a href="example-population-mean.html"><i class="fa fa-check"></i><b>2</b> Example Population Mean</a><ul>
+<li class="chapter" data-level="2.1" data-path="example-population-mean.html"><a href="example-population-mean.html#example"><i class="fa fa-check"></i><b>2.1</b> Example</a></li>
+<li class="chapter" data-level="2.2" data-path="example-population-mean.html"><a href="example-population-mean.html#example-1"><i class="fa fa-check"></i><b>2.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="continuous-random-variables.html"><a href="continuous-random-variables.html"><i class="fa fa-check"></i><b>3</b> Continuous Random Variables</a></li>
+<li class="chapter" data-level="4" data-path="variability.html"><a href="variability.html"><i class="fa fa-check"></i><b>4</b> Variability</a><ul>
+<li class="chapter" data-level="4.1" data-path="variability.html"><a href="variability.html#example-for-coin-toss"><i class="fa fa-check"></i><b>4.1</b> Example For Coin Toss</a></li>
+<li class="chapter" data-level="4.2" data-path="variability.html"><a href="variability.html#sample-variance"><i class="fa fa-check"></i><b>4.2</b> Sample Variance</a></li>
+<li class="chapter" data-level="4.3" data-path="variability.html"><a href="variability.html#simulation-example"><i class="fa fa-check"></i><b>4.3</b> Simulation Example</a></li>
+<li class="chapter" data-level="4.4" data-path="variability.html"><a href="variability.html#data-example"><i class="fa fa-check"></i><b>4.4</b> Data Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="distributions.html"><a href="distributions.html"><i class="fa fa-check"></i><b>5</b> Distributions</a><ul>
+<li class="chapter" data-level="5.1" data-path="distributions.html"><a href="distributions.html#bernoulli-distribution-binomial"><i class="fa fa-check"></i><b>5.1</b> Bernoulli Distribution (Binomial)</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="distributions.html"><a href="distributions.html#binomial-trails"><i class="fa fa-check"></i><b>5.1.1</b> Binomial Trails</a></li>
+<li class="chapter" data-level="5.1.2" data-path="distributions.html"><a href="distributions.html#example-2"><i class="fa fa-check"></i><b>5.1.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="distributions.html"><a href="distributions.html#normal-distribution"><i class="fa fa-check"></i><b>5.2</b> Normal Distribution</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="distributions.html"><a href="distributions.html#examples"><i class="fa fa-check"></i><b>5.2.1</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="distributions.html"><a href="distributions.html#poisson-distribution"><i class="fa fa-check"></i><b>5.3</b> Poisson Distribution</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="distributions.html"><a href="distributions.html#uses-of-the-poisson-distribution"><i class="fa fa-check"></i><b>5.3.1</b> Uses of the Poisson Distribution</a></li>
+<li class="chapter" data-level="5.3.2" data-path="distributions.html"><a href="distributions.html#rates-and-poisson-random-variables"><i class="fa fa-check"></i><b>5.3.2</b> Rates and Poisson Random Variables</a></li>
+<li class="chapter" data-level="5.3.3" data-path="distributions.html"><a href="distributions.html#example-3"><i class="fa fa-check"></i><b>5.3.3</b> Example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="central-limit-theorem.html"><a href="central-limit-theorem.html"><i class="fa fa-check"></i><b>6</b> Central Limit Theorem</a><ul>
+<li class="chapter" data-level="6.1" data-path="central-limit-theorem.html"><a href="central-limit-theorem.html#examples-1"><i class="fa fa-check"></i><b>6.1</b> Examples</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="central-limit-theorem.html"><a href="central-limit-theorem.html#coin-clt"><i class="fa fa-check"></i><b>6.1.1</b> Coin CLT</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="confidence-intervals.html"><a href="confidence-intervals.html"><i class="fa fa-check"></i><b>7</b> Confidence Intervals</a><ul>
+<li class="chapter" data-level="7.1" data-path="confidence-intervals.html"><a href="confidence-intervals.html#example-give-ci-for-the-average-sons-height"><i class="fa fa-check"></i><b>7.1</b> Example: Give CI for the average Son’s height</a></li>
+<li class="chapter" data-level="7.2" data-path="confidence-intervals.html"><a href="confidence-intervals.html#sample-proportions"><i class="fa fa-check"></i><b>7.2</b> Sample Proportions</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="confidence-intervals.html"><a href="confidence-intervals.html#example-4"><i class="fa fa-check"></i><b>7.2.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="confidence-intervals.html"><a href="confidence-intervals.html#binomial-interval"><i class="fa fa-check"></i><b>7.3</b> Binomial Interval</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="confidence-intervals.html"><a href="confidence-intervals.html#small-n-values"><i class="fa fa-check"></i><b>7.3.1</b> Small <span class="math inline">\(n\)</span> Values</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="confidence-intervals.html"><a href="confidence-intervals.html#poisson-interval"><i class="fa fa-check"></i><b>7.4</b> Poisson Interval</a></li>
+<li class="chapter" data-level="7.5" data-path="confidence-intervals.html"><a href="confidence-intervals.html#simulating-poisson-coverage"><i class="fa fa-check"></i><b>7.5</b> Simulating Poisson Coverage</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="t-confidence-intervals.html"><a href="t-confidence-intervals.html"><i class="fa fa-check"></i><b>8</b> T Confidence Intervals</a><ul>
+<li class="chapter" data-level="8.1" data-path="t-confidence-intervals.html"><a href="t-confidence-intervals.html#gussets-t-distribution"><i class="fa fa-check"></i><b>8.1</b> Gusset’s <span class="math inline">\(t\)</span> distribution</a></li>
+<li class="chapter" data-level="8.2" data-path="t-confidence-intervals.html"><a href="t-confidence-intervals.html#notes-about-the-t-interval"><i class="fa fa-check"></i><b>8.2</b> Notes about the <span class="math inline">\(t\)</span> interval</a></li>
+<li class="chapter" data-level="8.3" data-path="t-confidence-intervals.html"><a href="t-confidence-intervals.html#sleep-data"><i class="fa fa-check"></i><b>8.3</b> Sleep Data</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html"><i class="fa fa-check"></i><b>9</b> Independent Group T-Intervals</a><ul>
+<li class="chapter" data-level="9.1" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html#confidence-interval"><i class="fa fa-check"></i><b>9.1</b> Confidence Interval</a></li>
+<li class="chapter" data-level="9.2" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html#example-5"><i class="fa fa-check"></i><b>9.2</b> Example</a></li>
+<li class="chapter" data-level="9.3" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html#example-chick-weight"><i class="fa fa-check"></i><b>9.3</b> Example Chick Weight</a></li>
+<li class="chapter" data-level="9.4" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html#dealing-with-unequal-variances"><i class="fa fa-check"></i><b>9.4</b> Dealing with Unequal Variances</a></li>
+<li class="chapter" data-level="9.5" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html#example-6"><i class="fa fa-check"></i><b>9.5</b> Example</a></li>
+<li class="chapter" data-level="9.6" data-path="independent-group-t-intervals.html"><a href="independent-group-t-intervals.html#comparing-other-kinds-of-data"><i class="fa fa-check"></i><b>9.6</b> Comparing Other Kinds of Data</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html"><i class="fa fa-check"></i><b>10</b> Hypothesis Tests</a><ul>
+<li class="chapter" data-level="10.1" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#hypothesis-testing"><i class="fa fa-check"></i><b>10.1</b> Hypothesis Testing</a></li>
+<li class="chapter" data-level="10.2" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#example-7"><i class="fa fa-check"></i><b>10.2</b> Example</a></li>
+<li class="chapter" data-level="10.3" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#discussion"><i class="fa fa-check"></i><b>10.3</b> Discussion</a></li>
+<li class="chapter" data-level="10.4" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#our-last-example"><i class="fa fa-check"></i><b>10.4</b> Our Last Example</a></li>
+<li class="chapter" data-level="10.5" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#t-tests"><i class="fa fa-check"></i><b>10.5</b> T-Tests</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#example-reconsidered"><i class="fa fa-check"></i><b>10.5.1</b> Example Reconsidered</a></li>
+<li class="chapter" data-level="10.5.2" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#two-sided-tests"><i class="fa fa-check"></i><b>10.5.2</b> Two Sided Tests</a></li>
+<li class="chapter" data-level="10.5.3" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#t-test-in-r"><i class="fa fa-check"></i><b>10.5.3</b> T Test in R</a></li>
+<li class="chapter" data-level="10.5.4" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#connections-with-confidence-intervals"><i class="fa fa-check"></i><b>10.5.4</b> Connections with Confidence Intervals</a></li>
+<li class="chapter" data-level="10.5.5" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#two-group-intervals"><i class="fa fa-check"></i><b>10.5.5</b> Two Group Intervals</a></li>
+<li class="chapter" data-level="10.5.6" data-path="hypothesis-tests.html"><a href="hypothesis-tests.html#example-8"><i class="fa fa-check"></i><b>10.5.6</b> Example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="p-values.html"><a href="p-values.html"><i class="fa fa-check"></i><b>11</b> P-Values</a><ul>
+<li class="chapter" data-level="11.1" data-path="p-values.html"><a href="p-values.html#what-is-a-p-value"><i class="fa fa-check"></i><b>11.1</b> What is a P Value?</a></li>
+<li class="chapter" data-level="11.2" data-path="p-values.html"><a href="p-values.html#the-attained-significance-level"><i class="fa fa-check"></i><b>11.2</b> The Attained Significance Level</a></li>
+<li class="chapter" data-level="11.3" data-path="p-values.html"><a href="p-values.html#example-of-your-friend-having-children"><i class="fa fa-check"></i><b>11.3</b> Example of Your Friend Having Children</a></li>
+<li class="chapter" data-level="11.4" data-path="p-values.html"><a href="p-values.html#poisson-example"><i class="fa fa-check"></i><b>11.4</b> Poisson Example</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="power.html"><a href="power.html"><i class="fa fa-check"></i><b>12</b> Power</a><ul>
+<li class="chapter" data-level="12.1" data-path="power.html"><a href="power.html#example-9"><i class="fa fa-check"></i><b>12.1</b> Example</a></li>
+<li class="chapter" data-level="12.2" data-path="power.html"><a href="power.html#calculating-power"><i class="fa fa-check"></i><b>12.2</b> Calculating Power</a></li>
+<li class="chapter" data-level="12.3" data-path="power.html"><a href="power.html#example-continued"><i class="fa fa-check"></i><b>12.3</b> Example Continued</a></li>
+<li class="chapter" data-level="12.4" data-path="power.html"><a href="power.html#question"><i class="fa fa-check"></i><b>12.4</b> Question</a></li>
+<li class="chapter" data-level="12.5" data-path="power.html"><a href="power.html#notes"><i class="fa fa-check"></i><b>12.5</b> Notes:</a></li>
+<li class="chapter" data-level="12.6" data-path="power.html"><a href="power.html#t-test-power"><i class="fa fa-check"></i><b>12.6</b> T-Test Power</a><ul>
+<li class="chapter" data-level="12.6.1" data-path="power.html"><a href="power.html#example-10"><i class="fa fa-check"></i><b>12.6.1</b> Example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html"><i class="fa fa-check"></i><b>13</b> Multiple Comparisons</a><ul>
+<li class="chapter" data-level="13.1" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#multiple-testing"><i class="fa fa-check"></i><b>13.1</b> Multiple Testing</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#key-ideas"><i class="fa fa-check"></i><b>13.1.1</b> Key Ideas</a></li>
+<li class="chapter" data-level="13.1.2" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#why-correct-for-multiple-tests"><i class="fa fa-check"></i><b>13.1.2</b> Why Correct for Multiple Tests?</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#error-rates"><i class="fa fa-check"></i><b>13.2</b> Error Rates</a></li>
+<li class="chapter" data-level="13.3" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#controlling-the-false-positive-rate"><i class="fa fa-check"></i><b>13.3</b> Controlling the False Positive Rate</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#controlling-the-family-wise-error-rate"><i class="fa fa-check"></i><b>13.3.1</b> Controlling the Family-wise Error Rate</a></li>
+<li class="chapter" data-level="13.3.2" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#controlling-the-false-discovery-rate-fdr"><i class="fa fa-check"></i><b>13.3.2</b> Controlling the False Discovery Rate (FDR)</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#adjusted-p-values"><i class="fa fa-check"></i><b>13.4</b> Adjusted P-Values</a></li>
+<li class="chapter" data-level="13.5" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#case-study-1-no-true-positives"><i class="fa fa-check"></i><b>13.5</b> Case Study 1: No True Positives</a></li>
+<li class="chapter" data-level="13.6" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#case-study-2-50-true-positives"><i class="fa fa-check"></i><b>13.6</b> Case Study 2: 50% True Positives</a></li>
+<li class="chapter" data-level="13.7" data-path="multiple-comparisons.html"><a href="multiple-comparisons.html#notes-1"><i class="fa fa-check"></i><b>13.7</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resampling.html"><a href="resampling.html"><i class="fa fa-check"></i><b>14</b> Resampling</a><ul>
+<li class="chapter" data-level="14.1" data-path="resampling.html"><a href="resampling.html#the-bootstrap"><i class="fa fa-check"></i><b>14.1</b> The Bootstrap</a></li>
+<li class="chapter" data-level="14.2" data-path="resampling.html"><a href="resampling.html#example-11"><i class="fa fa-check"></i><b>14.2</b> Example</a></li>
+<li class="chapter" data-level="14.3" data-path="resampling.html"><a href="resampling.html#the-principle"><i class="fa fa-check"></i><b>14.3</b> The Principle</a></li>
+<li class="chapter" data-level="14.4" data-path="resampling.html"><a href="resampling.html#nonparametric-bootstrap-algorithm-example"><i class="fa fa-check"></i><b>14.4</b> Nonparametric Bootstrap Algorithm Example</a></li>
+<li class="chapter" data-level="14.5" data-path="resampling.html"><a href="resampling.html#example-12"><i class="fa fa-check"></i><b>14.5</b> Example:</a></li>
+<li class="chapter" data-level="14.6" data-path="resampling.html"><a href="resampling.html#notes-2"><i class="fa fa-check"></i><b>14.6</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="permutation-tests.html"><a href="permutation-tests.html"><i class="fa fa-check"></i><b>15</b> Permutation Tests</a><ul>
+<li class="chapter" data-level="15.1" data-path="permutation-tests.html"><a href="permutation-tests.html#group-comparisons"><i class="fa fa-check"></i><b>15.1</b> Group Comparisons</a></li>
+<li class="chapter" data-level="15.2" data-path="permutation-tests.html"><a href="permutation-tests.html#variations-on-permutation-testing"><i class="fa fa-check"></i><b>15.2</b> Variations on Permutation Testing</a></li>
+<li class="chapter" data-level="15.3" data-path="permutation-tests.html"><a href="permutation-tests.html#permutation-test-b-v-c"><i class="fa fa-check"></i><b>15.3</b> Permutation Test B v C</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="intro-to-linear-regression.html"><a href="intro-to-linear-regression.html"><i class="fa fa-check"></i><b>16</b> Intro to Linear Regression</a><ul>
+<li class="chapter" data-level="16.1" data-path="intro-to-linear-regression.html"><a href="intro-to-linear-regression.html#intro-basic-least-squares"><i class="fa fa-check"></i><b>16.1</b> Intro: Basic Least Squares</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="intro-to-linear-regression.html"><a href="intro-to-linear-regression.html#finding-the-middle-via-least-squares"><i class="fa fa-check"></i><b>16.1.1</b> Finding the Middle via Least Squares</a></li>
+<li class="chapter" data-level="16.1.2" data-path="intro-to-linear-regression.html"><a href="intro-to-linear-regression.html#proof-that-bary-is-the-minimiser"><i class="fa fa-check"></i><b>16.1.2</b> Proof that <span class="math inline">\(\bar{Y}\)</span> is the minimiser</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="intro-to-linear-regression.html"><a href="intro-to-linear-regression.html#comparing-childrens-heights-to-their-parentss-heights"><i class="fa fa-check"></i><b>16.2</b> Comparing children’s heights to their parents’s heights</a></li>
+<li class="chapter" data-level="16.3" data-path="intro-to-linear-regression.html"><a href="intro-to-linear-regression.html#regression-through-the-origin"><i class="fa fa-check"></i><b>16.3</b> Regression through the Origin</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="linear-least-squares.html"><a href="linear-least-squares.html"><i class="fa fa-check"></i><b>17</b> Linear Least Squares</a><ul>
+<li class="chapter" data-level="17.1" data-path="linear-least-squares.html"><a href="linear-least-squares.html#notation-for-data"><i class="fa fa-check"></i><b>17.1</b> Notation for data</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="linear-least-squares.html"><a href="linear-least-squares.html#the-empirical-mean"><i class="fa fa-check"></i><b>17.1.1</b> The empirical mean</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="linear-least-squares.html"><a href="linear-least-squares.html#the-empirical-standard-deviation-and-variance"><i class="fa fa-check"></i><b>17.2</b> The empirical standard deviation and variance</a></li>
+<li class="chapter" data-level="17.3" data-path="linear-least-squares.html"><a href="linear-least-squares.html#normalisation"><i class="fa fa-check"></i><b>17.3</b> Normalisation</a></li>
+<li class="chapter" data-level="17.4" data-path="linear-least-squares.html"><a href="linear-least-squares.html#the-empirical-covariance"><i class="fa fa-check"></i><b>17.4</b> The Empirical Covariance</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="least-squares-estimation.html"><a href="least-squares-estimation.html"><i class="fa fa-check"></i><b>18</b> Least Squares Estimation</a><ul>
+<li class="chapter" data-level="18.1" data-path="least-squares-estimation.html"><a href="least-squares-estimation.html#results"><i class="fa fa-check"></i><b>18.1</b> Results</a></li>
+<li class="chapter" data-level="18.2" data-path="least-squares-estimation.html"><a href="least-squares-estimation.html#linear-least-squares-coding-example"><i class="fa fa-check"></i><b>18.2</b> Linear Least Squares Coding Example</a></li>
+<li class="chapter" data-level="18.3" data-path="least-squares-estimation.html"><a href="least-squares-estimation.html#normalising-variables-results-in-the-slope-being-the-correlation"><i class="fa fa-check"></i><b>18.3</b> Normalising variables results in the slope being the correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="quiz-1.html"><a href="quiz-1.html"><i class="fa fa-check"></i><b>19</b> Quiz 1:</a></li>
+<li class="chapter" data-level="20" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html"><i class="fa fa-check"></i><b>20</b> Statistical Linear Regression Models</a><ul>
+<li class="chapter" data-level="20.1" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#basic-regression-model-with-additive-gaussian-errors"><i class="fa fa-check"></i><b>20.1</b> Basic Regression Model with Additive Gaussian Errors</a></li>
+<li class="chapter" data-level="20.2" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#interpreting-coefficients"><i class="fa fa-check"></i><b>20.2</b> Interpreting Coefficients</a></li>
+<li class="chapter" data-level="20.3" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#linear-regression-for-prediction"><i class="fa fa-check"></i><b>20.3</b> Linear Regression for Prediction</a><ul>
+<li class="chapter" data-level="20.3.1" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#fitting-the-linear-regression-model"><i class="fa fa-check"></i><b>20.3.1</b> Fitting the Linear Regression Model</a></li>
+<li class="chapter" data-level="20.3.2" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#getting-a-more-interpretable-result"><i class="fa fa-check"></i><b>20.3.2</b> Getting a More Interpretable Result</a></li>
+<li class="chapter" data-level="20.3.3" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#predicting-the-price-of-a-diamond"><i class="fa fa-check"></i><b>20.3.3</b> Predicting the Price of a Diamond</a></li>
+</ul></li>
+<li class="chapter" data-level="20.4" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#residuals-and-residual-variation"><i class="fa fa-check"></i><b>20.4</b> Residuals and Residual Variation</a><ul>
+<li class="chapter" data-level="20.4.1" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#motivating-example"><i class="fa fa-check"></i><b>20.4.1</b> Motivating example</a></li>
+<li class="chapter" data-level="20.4.2" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#properties-of-the-residuals"><i class="fa fa-check"></i><b>20.4.2</b> Properties of the Residuals</a></li>
+<li class="chapter" data-level="20.4.3" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#non-linear-data"><i class="fa fa-check"></i><b>20.4.3</b> Non Linear Data</a></li>
+<li class="chapter" data-level="20.4.4" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#heteroskedasticity"><i class="fa fa-check"></i><b>20.4.4</b> Heteroskedasticity</a></li>
+</ul></li>
+<li class="chapter" data-level="20.5" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#estimating-residual-variation"><i class="fa fa-check"></i><b>20.5</b> Estimating Residual Variation</a></li>
+<li class="chapter" data-level="20.6" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#r-squared"><i class="fa fa-check"></i><b>20.6</b> R Squared</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#example-13"><i class="fa fa-check"></i><b>20.6.1</b> Example:</a></li>
+</ul></li>
+<li class="chapter" data-level="20.7" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#inference-in-regression"><i class="fa fa-check"></i><b>20.7</b> Inference in Regression</a><ul>
+<li class="chapter" data-level="20.7.1" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#hand-rolling-the-linear-regression-function"><i class="fa fa-check"></i><b>20.7.1</b> Hand-rolling the linear regression function</a></li>
+<li class="chapter" data-level="20.7.2" data-path="statistical-linear-regression-models.html"><a href="statistical-linear-regression-models.html#getting-a-confidence-interval"><i class="fa fa-check"></i><b>20.7.2</b> Getting a Confidence Interval</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>21</b> Prediction</a><ul>
+<li class="chapter" data-level="21.1" data-path="prediction.html"><a href="prediction.html#prediction-of-outcomes"><i class="fa fa-check"></i><b>21.1</b> Prediction of Outcomes</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="quiz-2.html"><a href="quiz-2.html"><i class="fa fa-check"></i><b>22</b> Quiz 2:</a></li>
+<li class="chapter" data-level="23" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html"><i class="fa fa-check"></i><b>23</b> Multivariable Regression Analysis</a><ul>
+<li class="chapter" data-level="23.1" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#how-to-get-estimates"><i class="fa fa-check"></i><b>23.1</b> How to Get Estimates</a></li>
+<li class="chapter" data-level="23.2" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#interprettion-of-the-model-coefficients-wrt-the-model"><i class="fa fa-check"></i><b>23.2</b> Interprettion of the model coefficients wrt the model</a></li>
+<li class="chapter" data-level="23.3" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#fitted-values-residuals-and-residual"><i class="fa fa-check"></i><b>23.3</b> Fitted values, residuals and residual</a></li>
+<li class="chapter" data-level="23.4" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#multivariable-regression-examples"><i class="fa fa-check"></i><b>23.4</b> Multivariable Regression Examples</a></li>
+<li class="chapter" data-level="23.5" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#dummy-variables-are-smart"><i class="fa fa-check"></i><b>23.5</b> Dummy Variables are Smart</a></li>
+<li class="chapter" data-level="23.6" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#more-multivariable-regression-examples"><i class="fa fa-check"></i><b>23.6</b> More Multivariable Regression Examples</a><ul>
+<li class="chapter" data-level="23.6.1" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#two-lines-two-intercepts"><i class="fa fa-check"></i><b>23.6.1</b> Two lines, two intercepts</a></li>
+<li class="chapter" data-level="23.6.2" data-path="multivariable-regression-analysis.html"><a href="multivariable-regression-analysis.html#interaction-term-two-lines-two-slopes-two-intercepts"><i class="fa fa-check"></i><b>23.6.2</b> Interaction term: Two lines, two slopes, two intercepts</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="adjustment.html"><a href="adjustment.html"><i class="fa fa-check"></i><b>24</b> Adjustment</a><ul>
+<li class="chapter" data-level="24.1" data-path="adjustment.html"><a href="adjustment.html#coefficient-of-interest"><i class="fa fa-check"></i><b>24.1</b> Coefficient of interest</a></li>
+<li class="chapter" data-level="24.2" data-path="adjustment.html"><a href="adjustment.html#adjustment-examples"><i class="fa fa-check"></i><b>24.2</b> Adjustment examples</a><ul>
+<li class="chapter" data-level="24.2.1" data-path="adjustment.html"><a href="adjustment.html#simulation-1"><i class="fa fa-check"></i><b>24.2.1</b> Simulation 1:</a></li>
+<li class="chapter" data-level="24.2.2" data-path="adjustment.html"><a href="adjustment.html#simulation-2"><i class="fa fa-check"></i><b>24.2.2</b> Simulation 2:</a></li>
+<li class="chapter" data-level="24.2.3" data-path="adjustment.html"><a href="adjustment.html#simulation-3"><i class="fa fa-check"></i><b>24.2.3</b> Simulation 3:</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="adjustment.html"><a href="adjustment.html#final-thoughts"><i class="fa fa-check"></i><b>24.3</b> Final thoughts</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html"><i class="fa fa-check"></i><b>25</b> Residuals Diagnostics and Variation</a><ul>
+<li class="chapter" data-level="25.0.1" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html#influential-high-leverage-and-outlying-points"><i class="fa fa-check"></i><b>25.0.1</b> Influential, High Leverage and Outlying Points</a></li>
+<li class="chapter" data-level="25.0.2" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html#summary-of-the-plot"><i class="fa fa-check"></i><b>25.0.2</b> Summary of the plot</a></li>
+<li class="chapter" data-level="25.1" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html#influence-measures"><i class="fa fa-check"></i><b>25.1</b> Influence Measures</a><ul>
+<li class="chapter" data-level="25.1.1" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html#case-1-linear-trend-when-there-should-not-be"><i class="fa fa-check"></i><b>25.1.1</b> Case 1: Linear Trend when there should not be</a></li>
+<li class="chapter" data-level="25.1.2" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html#case-2-linear-trend-with-outlier"><i class="fa fa-check"></i><b>25.1.2</b> Case 2: Linear trend with outlier</a></li>
+<li class="chapter" data-level="25.1.3" data-path="residuals-diagnostics-and-variation.html"><a href="residuals-diagnostics-and-variation.html#the-plot-summary"><i class="fa fa-check"></i><b>25.1.3</b> The Plot Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="model-selection.html"><a href="model-selection.html"><i class="fa fa-check"></i><b>26</b> Model Selection</a><ul>
+<li class="chapter" data-level="26.1" data-path="model-selection.html"><a href="model-selection.html#multiple-variables"><i class="fa fa-check"></i><b>26.1</b> Multiple Variables</a></li>
+<li class="chapter" data-level="26.2" data-path="model-selection.html"><a href="model-selection.html#variance-inflation"><i class="fa fa-check"></i><b>26.2</b> Variance Inflation</a></li>
+<li class="chapter" data-level="26.3" data-path="model-selection.html"><a href="model-selection.html#variable-inclusion-and-exclusion"><i class="fa fa-check"></i><b>26.3</b> Variable Inclusion and Exclusion</a></li>
+<li class="chapter" data-level="26.4" data-path="model-selection.html"><a href="model-selection.html#predicting-medical-expenses-using-mlr"><i class="fa fa-check"></i><b>26.4</b> Predicting Medical Expenses using MLR</a><ul>
+<li class="chapter" data-level="26.4.1" data-path="model-selection.html"><a href="model-selection.html#evaluating-model-performance"><i class="fa fa-check"></i><b>26.4.1</b> Evaluating Model Performance</a></li>
+<li class="chapter" data-level="26.4.2" data-path="model-selection.html"><a href="model-selection.html#improving-model-performance"><i class="fa fa-check"></i><b>26.4.2</b> Improving Model Performance</a></li>
+<li class="chapter" data-level="26.4.3" data-path="model-selection.html"><a href="model-selection.html#transformations---converting-a-numeric-variable-to-a-binary-indicator"><i class="fa fa-check"></i><b>26.4.3</b> Transformations - Converting a numeric variable to a binary indicator</a></li>
+<li class="chapter" data-level="26.4.4" data-path="model-selection.html"><a href="model-selection.html#model-specification-adding-interaction-effects"><i class="fa fa-check"></i><b>26.4.4</b> Model Specification: Adding interaction effects</a></li>
+</ul></li>
+<li class="chapter" data-level="26.5" data-path="model-selection.html"><a href="model-selection.html#putting-it-all-together-an-impoved-regression-model"><i class="fa fa-check"></i><b>26.5</b> Putting it all Together: An Impoved Regression Model</a></li>
+</ul></li>
+<li class="chapter" data-level="27" data-path="regression-trees-and-model-trees.html"><a href="regression-trees-and-model-trees.html"><i class="fa fa-check"></i><b>27</b> Regression Trees and Model Trees</a><ul>
+<li class="chapter" data-level="27.1" data-path="regression-trees-and-model-trees.html"><a href="regression-trees-and-model-trees.html#building-the-model"><i class="fa fa-check"></i><b>27.1</b> Building the Model</a></li>
+<li class="chapter" data-level="27.2" data-path="regression-trees-and-model-trees.html"><a href="regression-trees-and-model-trees.html#evaluating-the-model"><i class="fa fa-check"></i><b>27.2</b> Evaluating the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="28" data-path="quiz-3.html"><a href="quiz-3.html"><i class="fa fa-check"></i><b>28</b> Quiz 3</a></li>
+<li class="chapter" data-level="29" data-path="introduction-to-generalized-linear-models.html"><a href="introduction-to-generalized-linear-models.html"><i class="fa fa-check"></i><b>29</b> Introduction to Generalized Linear Models</a></li>
+<li class="chapter" data-level="30" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html"><i class="fa fa-check"></i><b>30</b> Generalised Linear Models</a><ul>
+<li class="chapter" data-level="30.1" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#linear-models"><i class="fa fa-check"></i><b>30.1</b> Linear Models</a></li>
+<li class="chapter" data-level="30.2" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#generalised-linear-models-1"><i class="fa fa-check"></i><b>30.2</b> Generalised Linear Models</a></li>
+<li class="chapter" data-level="30.3" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#example-linear-models"><i class="fa fa-check"></i><b>30.3</b> Example: Linear Models</a></li>
+<li class="chapter" data-level="30.4" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#example-logistic-regression"><i class="fa fa-check"></i><b>30.4</b> Example Logistic Regression</a></li>
+<li class="chapter" data-level="30.5" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#example-poisson-regression"><i class="fa fa-check"></i><b>30.5</b> Example Poisson Regression</a></li>
+<li class="chapter" data-level="30.6" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#about-variances"><i class="fa fa-check"></i><b>30.6</b> About Variances</a></li>
+<li class="chapter" data-level="30.7" data-path="generalised-linear-models.html"><a href="generalised-linear-models.html#details"><i class="fa fa-check"></i><b>30.7</b> Details</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="glms-for-binary-data.html"><a href="glms-for-binary-data.html"><i class="fa fa-check"></i><b>31</b> GLMs for Binary Data</a><ul>
+<li class="chapter" data-level="31.1" data-path="glms-for-binary-data.html"><a href="glms-for-binary-data.html#key-ideas-1"><i class="fa fa-check"></i><b>31.1</b> Key Ideas</a></li>
+<li class="chapter" data-level="31.2" data-path="glms-for-binary-data.html"><a href="glms-for-binary-data.html#ravens-data"><i class="fa fa-check"></i><b>31.2</b> Ravens Data</a></li>
+<li class="chapter" data-level="31.3" data-path="glms-for-binary-data.html"><a href="glms-for-binary-data.html#interpreting-logistic-regression"><i class="fa fa-check"></i><b>31.3</b> Interpreting Logistic Regression</a></li>
+<li class="chapter" data-level="31.4" data-path="glms-for-binary-data.html"><a href="glms-for-binary-data.html#making-the-model-in-r"><i class="fa fa-check"></i><b>31.4</b> Making the Model in R</a></li>
+<li class="chapter" data-level="31.5" data-path="glms-for-binary-data.html"><a href="glms-for-binary-data.html#interpreting-odds-ratios"><i class="fa fa-check"></i><b>31.5</b> Interpreting Odds Ratios</a></li>
+</ul></li>
+<li class="chapter" data-level="32" data-path="poisson-glms.html"><a href="poisson-glms.html"><i class="fa fa-check"></i><b>32</b> Poisson GLMs</a><ul>
+<li class="chapter" data-level="32.1" data-path="poisson-glms.html"><a href="poisson-glms.html#posison-distribution"><i class="fa fa-check"></i><b>32.1</b> Posison Distribution</a></li>
+<li class="chapter" data-level="32.2" data-path="poisson-glms.html"><a href="poisson-glms.html#poisson-mass-function"><i class="fa fa-check"></i><b>32.2</b> Poisson Mass Function</a></li>
+<li class="chapter" data-level="32.3" data-path="poisson-glms.html"><a href="poisson-glms.html#linear-regression"><i class="fa fa-check"></i><b>32.3</b> Linear regression</a></li>
+<li class="chapter" data-level="32.4" data-path="poisson-glms.html"><a href="poisson-glms.html#exponentiating-coefficients"><i class="fa fa-check"></i><b>32.4</b> Exponentiating Coefficients</a></li>
+<li class="chapter" data-level="32.5" data-path="poisson-glms.html"><a href="poisson-glms.html#linear-vs-poisson"><i class="fa fa-check"></i><b>32.5</b> Linear vs Poisson</a><ul>
+<li class="chapter" data-level="32.5.1" data-path="poisson-glms.html"><a href="poisson-glms.html#multiplicitive-differences"><i class="fa fa-check"></i><b>32.5.1</b> Multiplicitive Differences</a></li>
+</ul></li>
+<li class="chapter" data-level="32.6" data-path="poisson-glms.html"><a href="poisson-glms.html#rates"><i class="fa fa-check"></i><b>32.6</b> Rates</a></li>
+</ul></li>
+<li class="chapter" data-level="33" data-path="exam-4.html"><a href="exam-4.html"><i class="fa fa-check"></i><b>33</b> Exam 4:</a></li>
+<li class="chapter" data-level="34" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html"><i class="fa fa-check"></i><b>34</b> Introduction To Machine Learning</a></li>
+<li class="chapter" data-level="35" data-path="prediction-motivation.html"><a href="prediction-motivation.html"><i class="fa fa-check"></i><b>35</b> Prediction Motivation</a><ul>
+<li class="chapter" data-level="35.1" data-path="prediction-motivation.html"><a href="prediction-motivation.html#who-predicts"><i class="fa fa-check"></i><b>35.1</b> Who Predicts?</a></li>
+<li class="chapter" data-level="35.2" data-path="prediction-motivation.html"><a href="prediction-motivation.html#what-is-prediction"><i class="fa fa-check"></i><b>35.2</b> What is Prediction?</a></li>
+<li class="chapter" data-level="35.3" data-path="prediction-motivation.html"><a href="prediction-motivation.html#components-of-a-predictor"><i class="fa fa-check"></i><b>35.3</b> Components of a Predictor</a><ul>
+<li class="chapter" data-level="35.3.1" data-path="prediction-motivation.html"><a href="prediction-motivation.html#spam-example"><i class="fa fa-check"></i><b>35.3.1</b> SPAM example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="36" data-path="relative-importance-of-steps.html"><a href="relative-importance-of-steps.html"><i class="fa fa-check"></i><b>36</b> Relative importance of steps</a><ul>
+<li class="chapter" data-level="36.1" data-path="relative-importance-of-steps.html"><a href="relative-importance-of-steps.html#features-matter"><i class="fa fa-check"></i><b>36.1</b> Features Matter</a><ul>
+<li class="chapter" data-level="36.1.1" data-path="relative-importance-of-steps.html"><a href="relative-importance-of-steps.html#issues-to-consider"><i class="fa fa-check"></i><b>36.1.1</b> Issues to consider</a></li>
+<li class="chapter" data-level="36.1.2" data-path="relative-importance-of-steps.html"><a href="relative-importance-of-steps.html#prediction-is-about-accuracy-trade-offs"><i class="fa fa-check"></i><b>36.1.2</b> Prediction is about accuracy trade-offs</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="37" data-path="in-and-out-of-sample-error.html"><a href="in-and-out-of-sample-error.html"><i class="fa fa-check"></i><b>37</b> In and out of sample error</a><ul>
+<li class="chapter" data-level="37.0.1" data-path="in-and-out-of-sample-error.html"><a href="in-and-out-of-sample-error.html#whats-going-on"><i class="fa fa-check"></i><b>37.0.1</b> What’s going on?</a></li>
+</ul></li>
+<li class="chapter" data-level="38" data-path="prediction-study-design.html"><a href="prediction-study-design.html"><i class="fa fa-check"></i><b>38</b> Prediction Study Design</a><ul>
+<li class="chapter" data-level="38.1" data-path="prediction-study-design.html"><a href="prediction-study-design.html#avoid-small-sample-sizes"><i class="fa fa-check"></i><b>38.1</b> Avoid Small Sample Sizes</a></li>
+<li class="chapter" data-level="38.2" data-path="prediction-study-design.html"><a href="prediction-study-design.html#rules-of-thumb-for-prediction-study-design"><i class="fa fa-check"></i><b>38.2</b> Rules of thumb for prediction study design</a></li>
+<li class="chapter" data-level="38.3" data-path="prediction-study-design.html"><a href="prediction-study-design.html#some-principals-to-remember"><i class="fa fa-check"></i><b>38.3</b> Some Principals to Remember</a></li>
+</ul></li>
+<li class="chapter" data-level="39" data-path="types-of-errors.html"><a href="types-of-errors.html"><i class="fa fa-check"></i><b>39</b> Types of Errors</a><ul>
+<li class="chapter" data-level="39.1" data-path="types-of-errors.html"><a href="types-of-errors.html#basic-terms"><i class="fa fa-check"></i><b>39.1</b> Basic Terms</a></li>
+<li class="chapter" data-level="39.2" data-path="types-of-errors.html"><a href="types-of-errors.html#screening-tests"><i class="fa fa-check"></i><b>39.2</b> Screening Tests</a></li>
+<li class="chapter" data-level="39.3" data-path="types-of-errors.html"><a href="types-of-errors.html#common-error-measures-for-continuous-data"><i class="fa fa-check"></i><b>39.3</b> Common Error Measures For Continuous Data</a></li>
+</ul></li>
+<li class="chapter" data-level="40" data-path="roc-curves.html"><a href="roc-curves.html"><i class="fa fa-check"></i><b>40</b> ROC Curves</a><ul>
+<li class="chapter" data-level="40.1" data-path="roc-curves.html"><a href="roc-curves.html#why-a-curve"><i class="fa fa-check"></i><b>40.1</b> Why a Curve?</a></li>
+<li class="chapter" data-level="40.2" data-path="roc-curves.html"><a href="roc-curves.html#cross-validation"><i class="fa fa-check"></i><b>40.2</b> Cross Validation</a><ul>
+<li class="chapter" data-level="40.2.1" data-path="roc-curves.html"><a href="roc-curves.html#key-idea"><i class="fa fa-check"></i><b>40.2.1</b> Key Idea</a></li>
+</ul></li>
+<li class="chapter" data-level="40.3" data-path="roc-curves.html"><a href="roc-curves.html#example-14"><i class="fa fa-check"></i><b>40.3</b> Example:</a></li>
+<li class="chapter" data-level="40.4" data-path="roc-curves.html"><a href="roc-curves.html#considerations"><i class="fa fa-check"></i><b>40.4</b> Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="41" data-path="what-data-should-you-use.html"><a href="what-data-should-you-use.html"><i class="fa fa-check"></i><b>41</b> What Data Should You Use?</a></li>
+<li class="chapter" data-level="42" data-path="the-caret-package.html"><a href="the-caret-package.html"><i class="fa fa-check"></i><b>42</b> The Caret Package</a><ul>
+<li class="chapter" data-level="42.1" data-path="the-caret-package.html"><a href="the-caret-package.html#machine-learning-algorithms-in-r"><i class="fa fa-check"></i><b>42.1</b> Machine Learning Algorithms in R</a></li>
+<li class="chapter" data-level="42.2" data-path="the-caret-package.html"><a href="the-caret-package.html#spam-example-data-splitting"><i class="fa fa-check"></i><b>42.2</b> SPAM Example: Data Splitting</a></li>
+</ul></li>
+<li class="chapter" data-level="43" data-path="data-slicing.html"><a href="data-slicing.html"><i class="fa fa-check"></i><b>43</b> Data Slicing</a><ul>
+<li class="chapter" data-level="43.1" data-path="data-slicing.html"><a href="data-slicing.html#spam-example-k-fold"><i class="fa fa-check"></i><b>43.1</b> SPAM Example: K-Fold</a></li>
+<li class="chapter" data-level="43.2" data-path="data-slicing.html"><a href="data-slicing.html#spam-example-resampling"><i class="fa fa-check"></i><b>43.2</b> Spam Example: Resampling</a></li>
+<li class="chapter" data-level="43.3" data-path="data-slicing.html"><a href="data-slicing.html#spam-example-time-slices"><i class="fa fa-check"></i><b>43.3</b> SPAM Example: Time Slices</a></li>
+</ul></li>
+<li class="chapter" data-level="44" data-path="training-options.html"><a href="training-options.html"><i class="fa fa-check"></i><b>44</b> Training Options</a><ul>
+<li class="chapter" data-level="44.1" data-path="training-options.html"><a href="training-options.html#traincontrol-resampling"><i class="fa fa-check"></i><b>44.1</b> trainControl Resampling</a></li>
+</ul></li>
+<li class="chapter" data-level="45" data-path="plotting-predictors.html"><a href="plotting-predictors.html"><i class="fa fa-check"></i><b>45</b> Plotting Predictors</a><ul>
+<li class="chapter" data-level="45.1" data-path="plotting-predictors.html"><a href="plotting-predictors.html#making-factors-with-the-hmisc-package"><i class="fa fa-check"></i><b>45.1</b> Making Factors with the <code>Hmisc</code> package</a><ul>
+<li class="chapter" data-level="45.1.1" data-path="plotting-predictors.html"><a href="plotting-predictors.html#making-tables"><i class="fa fa-check"></i><b>45.1.1</b> Making Tables</a></li>
+<li class="chapter" data-level="45.1.2" data-path="plotting-predictors.html"><a href="plotting-predictors.html#density-plots"><i class="fa fa-check"></i><b>45.1.2</b> Density Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="45.2" data-path="plotting-predictors.html"><a href="plotting-predictors.html#notes-3"><i class="fa fa-check"></i><b>45.2</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="46" data-path="preprocessing.html"><a href="preprocessing.html"><i class="fa fa-check"></i><b>46</b> Preprocessing</a><ul>
+<li class="chapter" data-level="46.1" data-path="preprocessing.html"><a href="preprocessing.html#why-preprocess"><i class="fa fa-check"></i><b>46.1</b> Why Preprocess?</a></li>
+<li class="chapter" data-level="46.2" data-path="preprocessing.html"><a href="preprocessing.html#standardising"><i class="fa fa-check"></i><b>46.2</b> Standardising</a><ul>
+<li class="chapter" data-level="46.2.1" data-path="preprocessing.html"><a href="preprocessing.html#using-the-preprocess-function"><i class="fa fa-check"></i><b>46.2.1</b> Using the preProcess function</a></li>
+</ul></li>
+<li class="chapter" data-level="46.3" data-path="preprocessing.html"><a href="preprocessing.html#standardising-box-cox-transforms"><i class="fa fa-check"></i><b>46.3</b> Standardising: Box-Cox Transforms</a></li>
+<li class="chapter" data-level="46.4" data-path="preprocessing.html"><a href="preprocessing.html#standardising-imputing-data"><i class="fa fa-check"></i><b>46.4</b> Standardising: Imputing Data</a></li>
+</ul></li>
+<li class="chapter" data-level="47" data-path="covariate-creation.html"><a href="covariate-creation.html"><i class="fa fa-check"></i><b>47</b> Covariate Creation</a><ul>
+<li class="chapter" data-level="47.1" data-path="covariate-creation.html"><a href="covariate-creation.html#two-levels-of-covariate-creation"><i class="fa fa-check"></i><b>47.1</b> Two Levels of Covariate Creation</a></li>
+<li class="chapter" data-level="47.2" data-path="covariate-creation.html"><a href="covariate-creation.html#removing-zero-covariates"><i class="fa fa-check"></i><b>47.2</b> Removing Zero Covariates</a></li>
+<li class="chapter" data-level="47.3" data-path="covariate-creation.html"><a href="covariate-creation.html#spline-basis"><i class="fa fa-check"></i><b>47.3</b> Spline Basis</a></li>
+<li class="chapter" data-level="47.4" data-path="covariate-creation.html"><a href="covariate-creation.html#notes-4"><i class="fa fa-check"></i><b>47.4</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="48" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html"><i class="fa fa-check"></i><b>48</b> Preprocessing With Principal Components Analysis (PCA)</a><ul>
+<li class="chapter" data-level="48.1" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#basic-pca-idea"><i class="fa fa-check"></i><b>48.1</b> Basic PCA Idea</a></li>
+<li class="chapter" data-level="48.2" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#two-related-problems"><i class="fa fa-check"></i><b>48.2</b> Two Related Problems</a></li>
+<li class="chapter" data-level="48.3" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#single-value-decomposition-svd-and-principal-components-analysis-pca"><i class="fa fa-check"></i><b>48.3</b> Single Value Decomposition (SVD) and Principal Components Analysis (PCA)</a></li>
+<li class="chapter" data-level="48.4" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#principal-components-in-r-prcomp"><i class="fa fa-check"></i><b>48.4</b> Principal Components in R <code>prComp</code></a></li>
+<li class="chapter" data-level="48.5" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#pca-on-all-spam-data"><i class="fa fa-check"></i><b>48.5</b> PCA on All Spam Data</a></li>
+<li class="chapter" data-level="48.6" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#pca-with-caret"><i class="fa fa-check"></i><b>48.6</b> PCA with Caret</a><ul>
+<li class="chapter" data-level="48.6.1" data-path="preprocessing-with-principal-components-analysis-pca.html"><a href="preprocessing-with-principal-components-analysis-pca.html#preprocessing-with-pca"><i class="fa fa-check"></i><b>48.6.1</b> Preprocessing with PCA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="49" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html"><i class="fa fa-check"></i><b>49</b> Predicting with Regression</a><ul>
+<li class="chapter" data-level="49.1" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html#key-ideas-2"><i class="fa fa-check"></i><b>49.1</b> Key Ideas</a></li>
+<li class="chapter" data-level="49.2" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html#example-geyser-eruptions"><i class="fa fa-check"></i><b>49.2</b> Example: Geyser Eruptions</a></li>
+<li class="chapter" data-level="49.3" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html#predicting-a-new-value"><i class="fa fa-check"></i><b>49.3</b> Predicting a New Value</a></li>
+<li class="chapter" data-level="49.4" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html#plot-predictions-training-vs-test-set"><i class="fa fa-check"></i><b>49.4</b> Plot Predictions: Training vs Test Set</a></li>
+<li class="chapter" data-level="49.5" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html#get-training-and-test-set-errors"><i class="fa fa-check"></i><b>49.5</b> Get Training and Test set Errors</a></li>
+<li class="chapter" data-level="49.6" data-path="predicting-with-regression.html"><a href="predicting-with-regression.html#prediction-intervals"><i class="fa fa-check"></i><b>49.6</b> Prediction Intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="50" data-path="predicting-with-regression-multiple-covariates.html"><a href="predicting-with-regression-multiple-covariates.html"><i class="fa fa-check"></i><b>50</b> Predicting with Regression Multiple Covariates</a><ul>
+<li class="chapter" data-level="50.1" data-path="predicting-with-regression-multiple-covariates.html"><a href="predicting-with-regression-multiple-covariates.html#example-predicting-wages"><i class="fa fa-check"></i><b>50.1</b> Example: Predicting wages</a></li>
+<li class="chapter" data-level="50.2" data-path="predicting-with-regression-multiple-covariates.html"><a href="predicting-with-regression-multiple-covariates.html#fit-a-linear-model"><i class="fa fa-check"></i><b>50.2</b> Fit a Linear Model</a></li>
+<li class="chapter" data-level="50.3" data-path="predicting-with-regression-multiple-covariates.html"><a href="predicting-with-regression-multiple-covariates.html#eda-in-glms"><i class="fa fa-check"></i><b>50.3</b> EDA in GLMs</a></li>
+<li class="chapter" data-level="50.4" data-path="predicting-with-regression-multiple-covariates.html"><a href="predicting-with-regression-multiple-covariates.html#predicted-vs-truth-in-test-set"><i class="fa fa-check"></i><b>50.4</b> Predicted vs Truth in Test Set</a></li>
+</ul></li>
+<li class="chapter" data-level="51" data-path="predicting-with-trees.html"><a href="predicting-with-trees.html"><i class="fa fa-check"></i><b>51</b> Predicting with Trees</a><ul>
+<li class="chapter" data-level="51.1" data-path="predicting-with-trees.html"><a href="predicting-with-trees.html#key-ideas-3"><i class="fa fa-check"></i><b>51.1</b> Key Ideas</a></li>
+<li class="chapter" data-level="51.2" data-path="predicting-with-trees.html"><a href="predicting-with-trees.html#the-basic-algorithm"><i class="fa fa-check"></i><b>51.2</b> The Basic Algorithm</a></li>
+<li class="chapter" data-level="51.3" data-path="predicting-with-trees.html"><a href="predicting-with-trees.html#measures-of-impurity"><i class="fa fa-check"></i><b>51.3</b> Measures of Impurity</a></li>
+<li class="chapter" data-level="51.4" data-path="predicting-with-trees.html"><a href="predicting-with-trees.html#example-iris-data"><i class="fa fa-check"></i><b>51.4</b> Example: Iris Data</a></li>
+<li class="chapter" data-level="51.5" data-path="predicting-with-trees.html"><a href="predicting-with-trees.html#notes-5"><i class="fa fa-check"></i><b>51.5</b> Notes:</a></li>
+</ul></li>
+<li class="chapter" data-level="52" data-path="bootstrap-aggregating-bagging.html"><a href="bootstrap-aggregating-bagging.html"><i class="fa fa-check"></i><b>52</b> Bootstrap Aggregating (Bagging)</a><ul>
+<li class="chapter" data-level="52.1" data-path="bootstrap-aggregating-bagging.html"><a href="bootstrap-aggregating-bagging.html#example-using-bagged-loess"><i class="fa fa-check"></i><b>52.1</b> Example using Bagged Loess</a></li>
+<li class="chapter" data-level="52.2" data-path="bootstrap-aggregating-bagging.html"><a href="bootstrap-aggregating-bagging.html#bagging-in-caret"><i class="fa fa-check"></i><b>52.2</b> Bagging in Caret</a></li>
+</ul></li>
+<li class="chapter" data-level="53" data-path="random-forests.html"><a href="random-forests.html"><i class="fa fa-check"></i><b>53</b> Random Forests</a><ul>
+<li class="chapter" data-level="53.1" data-path="random-forests.html"><a href="random-forests.html#random-forest-example-with-the-iris-dataset"><i class="fa fa-check"></i><b>53.1</b> Random Forest Example With the Iris Dataset</a></li>
+<li class="chapter" data-level="53.2" data-path="random-forests.html"><a href="random-forests.html#class-centers"><i class="fa fa-check"></i><b>53.2</b> Class “Centers”</a></li>
+<li class="chapter" data-level="53.3" data-path="random-forests.html"><a href="random-forests.html#predicting-new-values"><i class="fa fa-check"></i><b>53.3</b> Predicting New Values</a></li>
+<li class="chapter" data-level="53.4" data-path="random-forests.html"><a href="random-forests.html#notes-6"><i class="fa fa-check"></i><b>53.4</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="54" data-path="boosting.html"><a href="boosting.html"><i class="fa fa-check"></i><b>54</b> Boosting</a><ul>
+<li class="chapter" data-level="54.1" data-path="boosting.html"><a href="boosting.html#basic-idea"><i class="fa fa-check"></i><b>54.1</b> Basic Idea</a></li>
+<li class="chapter" data-level="54.2" data-path="boosting.html"><a href="boosting.html#boosting-in-r"><i class="fa fa-check"></i><b>54.2</b> Boosting in R</a></li>
+<li class="chapter" data-level="54.3" data-path="boosting.html"><a href="boosting.html#wage-example"><i class="fa fa-check"></i><b>54.3</b> Wage Example</a></li>
+</ul></li>
+<li class="chapter" data-level="55" data-path="model-based-prediction.html"><a href="model-based-prediction.html"><i class="fa fa-check"></i><b>55</b> Model Based Prediction</a><ul>
+<li class="chapter" data-level="55.1" data-path="model-based-prediction.html"><a href="model-based-prediction.html#basic-idea-1"><i class="fa fa-check"></i><b>55.1</b> Basic Idea</a></li>
+<li class="chapter" data-level="55.2" data-path="model-based-prediction.html"><a href="model-based-prediction.html#model-based-approach"><i class="fa fa-check"></i><b>55.2</b> Model Based Approach</a></li>
+<li class="chapter" data-level="55.3" data-path="model-based-prediction.html"><a href="model-based-prediction.html#classifying-using-the-model"><i class="fa fa-check"></i><b>55.3</b> Classifying Using the Model</a></li>
+<li class="chapter" data-level="55.4" data-path="model-based-prediction.html"><a href="model-based-prediction.html#why-linear-discriminant-analysis"><i class="fa fa-check"></i><b>55.4</b> Why Linear Discriminant Analysis?</a></li>
+<li class="chapter" data-level="55.5" data-path="model-based-prediction.html"><a href="model-based-prediction.html#decision-boundaries"><i class="fa fa-check"></i><b>55.5</b> Decision Boundaries</a></li>
+<li class="chapter" data-level="55.6" data-path="model-based-prediction.html"><a href="model-based-prediction.html#discriminant-function"><i class="fa fa-check"></i><b>55.6</b> Discriminant Function</a></li>
+<li class="chapter" data-level="55.7" data-path="model-based-prediction.html"><a href="model-based-prediction.html#naive-bayes"><i class="fa fa-check"></i><b>55.7</b> Naive Bayes</a></li>
+<li class="chapter" data-level="55.8" data-path="model-based-prediction.html"><a href="model-based-prediction.html#example-iris-data-1"><i class="fa fa-check"></i><b>55.8</b> Example: Iris Data</a></li>
+</ul></li>
+<li class="chapter" data-level="56" data-path="regularised-regression.html"><a href="regularised-regression.html"><i class="fa fa-check"></i><b>56</b> Regularised Regression</a><ul>
+<li class="chapter" data-level="56.1" data-path="regularised-regression.html"><a href="regularised-regression.html#basic-idea-2"><i class="fa fa-check"></i><b>56.1</b> Basic Idea</a></li>
+<li class="chapter" data-level="56.2" data-path="regularised-regression.html"><a href="regularised-regression.html#a-motivating-example"><i class="fa fa-check"></i><b>56.2</b> A Motivating Example</a></li>
+<li class="chapter" data-level="56.3" data-path="regularised-regression.html"><a href="regularised-regression.html#common-pattern"><i class="fa fa-check"></i><b>56.3</b> Common Pattern</a></li>
+<li class="chapter" data-level="56.4" data-path="regularised-regression.html"><a href="regularised-regression.html#model-selection-approach-split-samples"><i class="fa fa-check"></i><b>56.4</b> Model Selection Approach: Split Samples</a></li>
+<li class="chapter" data-level="56.5" data-path="regularised-regression.html"><a href="regularised-regression.html#decomposing-expected-prediction-error"><i class="fa fa-check"></i><b>56.5</b> Decomposing Expected Prediction Error</a></li>
+<li class="chapter" data-level="56.6" data-path="regularised-regression.html"><a href="regularised-regression.html#another-issue-for-high-dimensional-data"><i class="fa fa-check"></i><b>56.6</b> Another Issue for High-Dimensional Data</a></li>
+<li class="chapter" data-level="56.7" data-path="regularised-regression.html"><a href="regularised-regression.html#hard-thresholding"><i class="fa fa-check"></i><b>56.7</b> Hard Thresholding</a></li>
+<li class="chapter" data-level="56.8" data-path="regularised-regression.html"><a href="regularised-regression.html#regularisation-for-regression"><i class="fa fa-check"></i><b>56.8</b> Regularisation for Regression</a></li>
+<li class="chapter" data-level="56.9" data-path="regularised-regression.html"><a href="regularised-regression.html#ridge-regression"><i class="fa fa-check"></i><b>56.9</b> Ridge Regression</a><ul>
+<li class="chapter" data-level="56.9.1" data-path="regularised-regression.html"><a href="regularised-regression.html#tuning-parameter-lambda"><i class="fa fa-check"></i><b>56.9.1</b> Tuning Parameter <span class="math inline">\(\lambda\)</span></a></li>
+<li class="chapter" data-level="56.9.2" data-path="regularised-regression.html"><a href="regularised-regression.html#lasso"><i class="fa fa-check"></i><b>56.9.2</b> Lasso</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="57" data-path="combining-predictors-ensembling-methods.html"><a href="combining-predictors-ensembling-methods.html"><i class="fa fa-check"></i><b>57</b> Combining Predictors (Ensembling Methods)</a><ul>
+<li class="chapter" data-level="57.1" data-path="combining-predictors-ensembling-methods.html"><a href="combining-predictors-ensembling-methods.html#key-ideas-4"><i class="fa fa-check"></i><b>57.1</b> Key Ideas</a><ul>
+<li class="chapter" data-level="57.1.1" data-path="combining-predictors-ensembling-methods.html"><a href="combining-predictors-ensembling-methods.html#basic-intuition---majority-vote"><i class="fa fa-check"></i><b>57.1.1</b> Basic Intuition - Majority Vote</a></li>
+</ul></li>
+<li class="chapter" data-level="57.2" data-path="combining-predictors-ensembling-methods.html"><a href="combining-predictors-ensembling-methods.html#approaches-for-combining-classifiers"><i class="fa fa-check"></i><b>57.2</b> Approaches for Combining Classifiers</a></li>
+<li class="chapter" data-level="57.3" data-path="combining-predictors-ensembling-methods.html"><a href="combining-predictors-ensembling-methods.html#example-with-wage-data"><i class="fa fa-check"></i><b>57.3</b> Example with Wage Data</a></li>
+<li class="chapter" data-level="57.4" data-path="combining-predictors-ensembling-methods.html"><a href="combining-predictors-ensembling-methods.html#notes-7"><i class="fa fa-check"></i><b>57.4</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="58" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>58</b> Forecasting</a><ul>
+<li class="chapter" data-level="58.1" data-path="forecasting.html"><a href="forecasting.html#google-data-quantmod"><i class="fa fa-check"></i><b>58.1</b> Google Data: QuantMod</a></li>
+<li class="chapter" data-level="58.2" data-path="forecasting.html"><a href="forecasting.html#example-time-series-decomposition"><i class="fa fa-check"></i><b>58.2</b> Example Time Series Decomposition</a></li>
+<li class="chapter" data-level="58.3" data-path="forecasting.html"><a href="forecasting.html#training-and-test-sets"><i class="fa fa-check"></i><b>58.3</b> Training and Test Sets</a></li>
+<li class="chapter" data-level="58.4" data-path="forecasting.html"><a href="forecasting.html#simple-moving-average"><i class="fa fa-check"></i><b>58.4</b> Simple Moving Average</a></li>
+<li class="chapter" data-level="58.5" data-path="forecasting.html"><a href="forecasting.html#exponential-smoothing"><i class="fa fa-check"></i><b>58.5</b> Exponential Smoothing</a></li>
+<li class="chapter" data-level="58.6" data-path="forecasting.html"><a href="forecasting.html#notes-8"><i class="fa fa-check"></i><b>58.6</b> Notes</a></li>
+</ul></li>
+<li class="chapter" data-level="59" data-path="unsupervised-prediction.html"><a href="unsupervised-prediction.html"><i class="fa fa-check"></i><b>59</b> Unsupervised Prediction</a><ul>
+<li class="chapter" data-level="59.1" data-path="unsupervised-prediction.html"><a href="unsupervised-prediction.html#key-ideas-5"><i class="fa fa-check"></i><b>59.1</b> Key Ideas</a></li>
+<li class="chapter" data-level="59.2" data-path="unsupervised-prediction.html"><a href="unsupervised-prediction.html#irirs-example-ignoring-species-labels"><i class="fa fa-check"></i><b>59.2</b> Irirs Example Ignoring Species Labels</a><ul>
+<li class="chapter" data-level="59.2.1" data-path="unsupervised-prediction.html"><a href="unsupervised-prediction.html#build-a-predictor"><i class="fa fa-check"></i><b>59.2.1</b> Build a Predictor</a></li>
+<li class="chapter" data-level="59.2.2" data-path="unsupervised-prediction.html"><a href="unsupervised-prediction.html#apply-on-the-test-data-set"><i class="fa fa-check"></i><b>59.2.2</b> Apply on the Test Data Set</a></li>
+</ul></li>
+<li class="chapter" data-level="59.3" data-path="unsupervised-prediction.html"><a href="unsupervised-prediction.html#notes-9"><i class="fa fa-check"></i><b>59.3</b> Notes</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analysis Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-slicing" class="section level1">
+<h1><span class="header-section-number">43</span> Data Slicing</h1>
+<p>When using the <code>createDataParition()</code> function, the first argument you pass is what you want the function to “Split” on. Here we will set y to be the <code>spam$type</code> factor. The second argument tells the function what percentage of the data you want in the training set, in the code below it has been set to a <span class="math inline">\(75\% ~:~25\%\)</span> split.</p>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb355-1" title="1"><span class="co"># Load the package and the data</span></a>
+<a class="sourceLine" id="cb355-2" title="2"><span class="kw">library</span>(caret); <span class="kw">library</span>(kernlab); <span class="kw">data</span>(spam)</a>
+<a class="sourceLine" id="cb355-3" title="3"></a>
+<a class="sourceLine" id="cb355-4" title="4"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb355-5" title="5"></a>
+<a class="sourceLine" id="cb355-6" title="6"><span class="co"># Use data partition functions to create the training and testing sets</span></a>
+<a class="sourceLine" id="cb355-7" title="7">inTrain &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(<span class="dt">y =</span> spam<span class="op">$</span>type,</a>
+<a class="sourceLine" id="cb355-8" title="8">                               <span class="dt">p =</span> <span class="fl">0.75</span>,</a>
+<a class="sourceLine" id="cb355-9" title="9">                               <span class="dt">list=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb355-10" title="10">training &lt;-<span class="st"> </span>spam[inTrain, ]</a>
+<a class="sourceLine" id="cb355-11" title="11">testing &lt;-<span class="st"> </span>spam[<span class="op">-</span>inTrain, ]</a>
+<a class="sourceLine" id="cb355-12" title="12"></a>
+<a class="sourceLine" id="cb355-13" title="13"><span class="co"># Check that it works</span></a>
+<a class="sourceLine" id="cb355-14" title="14"><span class="kw">dim</span>(training)</a></code></pre></div>
+<pre><code>## [1] 3451   58</code></pre>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb357-1" title="1"><span class="kw">dim</span>(testing)</a></code></pre></div>
+<pre><code>## [1] 1150   58</code></pre>
+<div id="spam-example-k-fold" class="section level2">
+<h2><span class="header-section-number">43.1</span> SPAM Example: K-Fold</h2>
+<p>Important functions here:</p>
+<ul>
+<li><code>createFolds()</code></li>
+</ul>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb359-1" title="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb359-2" title="2"></a>
+<a class="sourceLine" id="cb359-3" title="3"><span class="co"># Create the folds returning the training data using the `createFolds` function</span></a>
+<a class="sourceLine" id="cb359-4" title="4">folds &lt;-<span class="st"> </span><span class="kw">createFolds</span>(<span class="dt">y =</span> spam<span class="op">$</span>type,</a>
+<a class="sourceLine" id="cb359-5" title="5">                     <span class="dt">k =</span> <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb359-6" title="6">                     <span class="dt">list =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb359-7" title="7">                     <span class="dt">returnTrain =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb359-8" title="8"></a>
+<a class="sourceLine" id="cb359-9" title="9"><span class="co"># Check how many data points are in each fold for the training data to make sure they&#39;re the same length</span></a>
+<a class="sourceLine" id="cb359-10" title="10"><span class="kw">sapply</span>(folds, length)</a></code></pre></div>
+<pre><code>## Fold01 Fold02 Fold03 Fold04 Fold05 Fold06 Fold07 Fold08 Fold09 Fold10 
+##   4141   4140   4140   4142   4142   4141   4141   4141   4140   4141</code></pre>
+<div class="sourceCode" id="cb361"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb361-1" title="1">folds[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a></code></pre></div>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8 10 11</code></pre>
+<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb363-1" title="1"><span class="co"># Create the folds returning the testing data using the `createFolds` function</span></a>
+<a class="sourceLine" id="cb363-2" title="2">folds &lt;-<span class="st"> </span><span class="kw">createFolds</span>(<span class="dt">y =</span> spam<span class="op">$</span>type,</a>
+<a class="sourceLine" id="cb363-3" title="3">                     <span class="dt">k =</span> <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb363-4" title="4">                     <span class="dt">list =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb363-5" title="5">                     <span class="dt">returnTrain =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb363-6" title="6"></a>
+<a class="sourceLine" id="cb363-7" title="7"><span class="co"># Check how many data points are in each fold for the testing data to make sure they&#39;re the same length</span></a>
+<a class="sourceLine" id="cb363-8" title="8"><span class="kw">sapply</span>(folds, length)</a></code></pre></div>
+<pre><code>## Fold01 Fold02 Fold03 Fold04 Fold05 Fold06 Fold07 Fold08 Fold09 Fold10 
+##    460    460    460    459    460    461    459    461    461    460</code></pre>
+<div class="sourceCode" id="cb365"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb365-1" title="1">folds[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a></code></pre></div>
+<pre><code>##  [1]   1  16  28  35  40  68  78  87 111 114</code></pre>
+</div>
+<div id="spam-example-resampling" class="section level2">
+<h2><span class="header-section-number">43.2</span> Spam Example: Resampling</h2>
+<p>If you want to resample or bootstrap instead of doing k-folds cross validation, you can use the <code>createResample()</code> function. The argument ‘times’ tells the function how many times you want to resample the data and the ‘list’ argument lets the function know what structure you would like the data to be outputted as.</p>
+<div class="sourceCode" id="cb367"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb367-1" title="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb367-2" title="2"></a>
+<a class="sourceLine" id="cb367-3" title="3"><span class="co"># Create resample using &#39;createResample()&#39; function</span></a>
+<a class="sourceLine" id="cb367-4" title="4">folds &lt;-<span class="st"> </span><span class="kw">createResample</span>(<span class="dt">y =</span> spam<span class="op">$</span>type, <span class="dt">times =</span> <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb367-5" title="5">                        <span class="dt">list =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb367-6" title="6"></a>
+<a class="sourceLine" id="cb367-7" title="7"><span class="kw">sapply</span>(folds, length)</a></code></pre></div>
+<pre><code>## Resample01 Resample02 Resample03 Resample04 Resample05 Resample06 Resample07 
+##       4601       4601       4601       4601       4601       4601       4601 
+## Resample08 Resample09 Resample10 
+##       4601       4601       4601</code></pre>
+<div class="sourceCode" id="cb369"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb369-1" title="1"><span class="co"># As we&#39;re resampling here, you can get the same output back multiple times, for example, we have 1 and 5 return twice in the first fold.</span></a>
+<a class="sourceLine" id="cb369-2" title="2">folds[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a></code></pre></div>
+<pre><code>##  [1]  1  1  2  5  5  9 13 16 17 18</code></pre>
+</div>
+<div id="spam-example-time-slices" class="section level2">
+<h2><span class="header-section-number">43.3</span> SPAM Example: Time Slices</h2>
+<p>If we want time slices for any particular reason, we can use the <code>createTimeSlices()</code> function to do that. The ‘initial Window’ argument lets the function know how long the slices will be (how many samples from our arbitrary time vector below) and the ‘horizon’ argument lets the function know how many samples we would like to predict using our window specified beforehand.</p>
+<div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb371-1" title="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb371-2" title="2"></a>
+<a class="sourceLine" id="cb371-3" title="3"><span class="co"># Create our arbitrary time vector</span></a>
+<a class="sourceLine" id="cb371-4" title="4">time &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb371-5" title="5"></a>
+<a class="sourceLine" id="cb371-6" title="6"><span class="co"># Create the folds uing our &#39;createTimeSlices&#39; function.</span></a>
+<a class="sourceLine" id="cb371-7" title="7">folds &lt;-<span class="st"> </span><span class="kw">createTimeSlices</span>(<span class="dt">y =</span> time, <span class="dt">initialWindow =</span> <span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb371-8" title="8">                          <span class="dt">horizon =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb371-9" title="9"></a>
+<a class="sourceLine" id="cb371-10" title="10"><span class="co">#What does the &#39;folds&#39; object look like now?</span></a>
+<a class="sourceLine" id="cb371-11" title="11"><span class="kw">names</span>(folds)</a></code></pre></div>
+<pre><code>## [1] &quot;train&quot; &quot;test&quot;</code></pre>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb373-1" title="1"><span class="co"># Check how many samples are in both our window and our horizon</span></a>
+<a class="sourceLine" id="cb373-2" title="2">folds<span class="op">$</span>train[[<span class="dv">1</span>]]</a></code></pre></div>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</code></pre>
+<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb375-1" title="1">folds<span class="op">$</span>test[[<span class="dv">1</span>]]</a></code></pre></div>
+<pre><code>##  [1] 21 22 23 24 25 26 27 28 29 30</code></pre>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="the-caret-package.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="training-options.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
