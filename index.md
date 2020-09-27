@@ -1,37 +1,23 @@
-## Welcome to GitHub Pages
+## Welcome to my GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/Jacksprojects/Pages/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This is mainly a terribly organised collection of notes and R scripts for learning R data analysis made using R Markdown.
+Check out the repo if you're interested, I'll leave links to articles below.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+![](https://media.giphy.com/media/8gJ28HfjAkc9y/giphy.gif)
 
-### Markdown
+## General Analysis Notes
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+* [Notes taken from Johns Hopkins Data Analysis Course knitted with **BookDown**](https://jacksprojects.github.io/Pages/Gitbook/introduction-to-stats-expected-values.html)
+* [Notes on Timeseries in R](https://jacksprojects.github.io/Pages/Timeseries) from the fantastic **[Intoductory Time Series with R](https://link.springer.com/book/10.1007/978-0-387-88698-5) by Paul S.P. Cowpertwait and Andrew V. Metcalfe**
 
-```markdown
-Syntax highlighted code block
+## More specific R stuff
 
-# Header 1
-## Header 2
-### Header 3
+* [Using OpenStreet maps in R using `leaflet`](https://jacksprojects.github.io/Pages/maps.html)
+* [How to make 3D Maps with raytracing in R](https://jacksprojects.github.io/Pages/3DMaps.html)
+* [How to do Datascraping the easy way in R](https://jacksprojects.github.io/Pages/datascraping.html)
 
-- Bulleted
-- List
+## Html Dashboards in R
+* [Visualising Pokemon Data with **FlexDashboard**](https://jacksprojects.github.io/Pages/Pokemon/dash)
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Jacksprojects/Pages/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Live Shiny Dashboards
+* [COVID-19 Case Tracker](https://jacksprojects.shinyapps.io/CovidDashboard)
