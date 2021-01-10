@@ -345,6 +345,7 @@ button{
     color: #555555;
     line-height: 26px;
     margin: 0;
+    text-align: justify;
 }
 .about-section .about-content .stats{
     flex: 0 0 100%;
@@ -441,10 +442,17 @@ padding: 0 15px;
     background-color: black;
     opacity: 0.7;
 }
+.service-section .service-item-inner .overlay h4 a{
+    color: white;
+    text-decoration: none;
+    opacity: 1;
+    transition: all 0.5s ease;
+}
 .service-section .service-item-inner .overlay h4{
     color: transparent;
     opacity: 0;
-    font-size: 25px;
+    font-size: 20px;
+    text-decoration: none;
     margin: 0;
     text-align: center;
     align-items: center;
@@ -452,6 +460,7 @@ padding: 0 15px;
 }
 .service-section .service-item-inner:hover .overlay h4{
     color: white;
+    text-decoration: none;
     opacity: 1;
     transition: all 0.5s ease;
 }
@@ -495,14 +504,20 @@ padding: 0 15px;
     align-items: flex-end;
     transition: all 0.5s ease;
 }
-.work-section .work-item-inner .overlay h4{
+.work-section .work-item-inner .overlay h4 a{
+    color: white;
+    opacity: 1;
+    transition: all 0.5s ease;
+    text-decoration: none;
+}
+.work-section .work-item-inner .overlay h4 a{
     color: transparent;
     font-size: 20px;
     margin: 0;
     transition: all 0.5s ease;
 
 }
-.work-section .work-item-inner:hover .overlay h4{
+.work-section .work-item-inner:hover .overlay h4 a{
     color: white;
     opacity: 1;
     transition: all 0.5s ease;
@@ -594,13 +609,13 @@ padding: 0 15px;
     padding: 0 15px;
 }
 .contact-section .contact-info .info-item h5{
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 600;
     margin: 0;
     text-align: center;
 }
 .contact-section .contact-info .info-item p{
-    font-size: 16px;
+    font-size: 25px;
     margin: 0;
     color: #555555;
     text-align: center;
@@ -636,6 +651,10 @@ padding: 0 15px;
     .header{
         padding: 7px 0;
         position: fixed;
+    }
+    .header .brand-name a{
+        font-size: 16px;
+        letter-spacing: 5px;
     }
     .header .nav-toggle{
         display:flex;
@@ -738,6 +757,18 @@ padding: 0 15px;
     }
     .contact-section .contact-form .form{
         padding: 55px 5px;
+    }
+    .contact-section .contact-info .info-item h5{
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+    }
+    .contact-section .contact-info .info-item p{
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
     }
     .work-section{
         padding-top: -50px;
