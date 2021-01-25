@@ -1,0 +1,231 @@
+---
+title: "Automating Email Reports with R"
+author: "Jack Quarm"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<center>
+  ![](https://media.giphy.com/media/26FeWNsNqHq2nRhC0/giphy.gif)
+</center>
+
+
+
+# Objective:
+
+One of the main priorities of any analytic pipeline is to make everything reproducible. Automating tasks that are usually done by hand helps to reduce any inconsistencies introduced by human error. Now obviously there are a ton of ways that this can be done from scheduling tasks or writing bash scripts and CRON jobs to make sure that everything is done on schedule, but in this tutorial we'll focus on using R.
+
+## Defining our pipeline
+
+Reproducibility in this context refers to five key parts of the analysis pipeline:
+
+* **Data acquisition**
+
+* **Data processing**
+
+* **Data visualization**
+
+* **Report generation**
+
+* **Sharing the report??**
+
+## Data Aquisition
+
+Data can be aquired from a variety of sources, for example you could be sourcing data from `.csv` files, pulling data from an `API` or simply scraping data from the web. In any case we want to automate this more mechanical process to free up time and focus on **reproducibility**.
+
+## Data Processing
+
+Often the data that you want to use in your analysis will require processing before you can begin analyzing it. Things like type conversions and new variables may need to be created using the data that you have. Luckily we can write scripts to handle this workload.
+
+## Data Visualisation
+
+Data visualization is a key part of any analysis as it can both help to use your data to  both convey a story to your stakeholders and help you catch any inconsistencies or trends in your data that you might not have caught with summary statistics. Again, scripts can be used to automate this part of the process and integrating these scripts into your pipeline using Rmarkdown is really simple.
+
+## Report generation
+
+Rmarkdown makes generating reports really easy, and provides many options in terms of what format you want your reports to be in, form LaTex formatted PDFs, Word Docs, HTML pages with interactive components (my personal favorite), slideshows... the list is long.
+
+If you have any R scripts that you want to eventually turn into a report, simply move the code in your scripts into code chunks embedded inside your `.rmd` file and add all of the hard-coded text of your report such as section titles and explanations above or below these chunks using markdown. An example of a large file I've knitted using RMarkdown is the collection of analysis notes I collated and made into an E-book using the `bookdown` output option of RMarkdown.
+
+For the sake of this tutorial I've made a mock-up covid tracking report that takes data from Johns Hopkins university and uses this data to embed interactive visualizations into an HTML document which is then automatically sent as an email using gmail.
+
+As an example, this is the header for the RMarkdown file I'm using:
+
+```{r, eval = FALSE}
+---
+title: "Covid Daily Report"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+```
+
+To be able to use `prettydoc` to make themed HTML reports, just make sure that you install the `prettydoc` package.
+
+### Getting our data
+
+This code is based on the example `shinyapp` developed by Edward Parker from the London School of Hygiene & Tropical Medicine, it fetches Covid data from Johns Hopkins University and formats it for analysis. We'll be using the following packages:
+```{r, eval=FALSE}
+# load packages
+requiredPackages <- c('tidyverse','stringr', 'stringi', 'dplyr', 'plotly', 'ggplot2', 'reactable', 'tidyr')
+lapply(requiredPackages, require, character.only = TRUE)
+
+```
+
+```{r, eval=FALSE}
+# function to update jhu input data according to mapping base format
+update_jhu = function(input_df, tag) {
+  names(input_df)[1:2] = c("Province", "Country")
+  input_df$Country = input_df$Country %>% str_replace_all(., " ", "") 
+  dates = names(input_df)[which(names(input_df)=="1/22/20"):ncol(input_df)]
+  input_df = input_df %>% 
+    select(-c(Province, Lat, Long)) %>% 
+    group_by(Country) %>% 
+    summarise_each(funs(sum)) %>%
+    data.frame()
+  rownames(input_df) = input_df$Country
+  rownames(input_df) = paste0(input_df$Country,"_",tag)
+  input_df = input_df %>% select(-c(Country)) %>% t()
+  input_df = data.frame(input_df)
+  input_df$Date = dates
+  rownames(input_df) = 1:nrow(input_df)
+  input_df$Date = format(as.Date(input_df$Date,"%m/%d/%y"))
+  input_df
+}
+
+# load latest Covid-2019 data: confirmed cases
+jhu_cases <- as.data.frame(data.table::fread("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"))
+jhu_cases[is.na(jhu_cases)]=0
+total_cases <- sum(jhu_cases[,ncol(jhu_cases)])
+jhu_cases = update_jhu(jhu_cases, "cases")
+if (total_cases!=sum(jhu_cases[nrow(jhu_cases),1:(ncol(jhu_cases)-1)])) { stop(paste0("Error: incorrect processing - total counts do not match")) }
+
+# load latest Covid-2019 data: deaths
+jhu_deaths <- as.data.frame(data.table::fread("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"))
+jhu_deaths[is.na(jhu_deaths)]=0
+total_deaths <- sum(jhu_deaths[,ncol(jhu_deaths)])
+jhu_deaths = update_jhu(jhu_deaths, "deaths")
+if (total_deaths!=sum(jhu_deaths[nrow(jhu_deaths),1:(ncol(jhu_deaths)-1)])) { stop(paste0("Error: incorrect processing - total counts do not match")) }
+
+# load latest Covid-2019 data: recovered
+jhu_rec <- as.data.frame(data.table::fread("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"))
+jhu_rec[is.na(jhu_rec)]=0
+total_rec <- sum(jhu_rec[,ncol(jhu_rec)])
+jhu_rec = update_jhu(jhu_rec, "recovered")
+if (total_rec!=sum(jhu_rec[nrow(jhu_rec),1:(ncol(jhu_rec)-1)])) { stop(paste0("Error: incorrect processing - total counts do not match")) }
+
+# merge dataframes 
+jhu_merge = merge(jhu_cases, jhu_deaths, by = "Date")
+jhu_merge = merge(jhu_merge, jhu_rec, by = "Date")
+jhu_merge$Date = as.Date(jhu_merge$Date, format="%Y-%m-%d")
+jhu_merge$update = 1:nrow(jhu_merge)
+
+jhu_rec <- NULL
+jhu_cases <- NULL
+jhu_deaths <- NULL
+
+jhu_merge <- jhu_merge[, c('Date', 'Tunisia_cases', 'Tunisia_deaths', 'US_cases', 'US_deaths','Australia_cases','Australia_deaths')]
+jhu_merge <- as.data.frame(jhu_merge)
+jhu_merge$Date <- as.Date(jhu_merge$Date)
+
+jhu_long <- gather(jhu_merge, country, count, -1)
+jhu_long <-jhu_long %>%
+  mutate(month = format(as.Date(jhu_long$Date), "%Y-%B"))
+```
+
+Now that we have our data we'll add an interactive table for filtering and viewing the data using `reactable`, some interactive visualizations using `plotly` and add some text which will display the data using plain text based on a variable.
+
+### Displaying Data as Text
+
+Below, we'll show some information based on our Covid data, namely the total number of cases, deaths and recoveries, along with the date at the time of executing the script. To make sure that your data can be read as text, you can use `cat()` and specify variables, and when the script is run, the values of these variables will be added to the report. In this code chunk, I've specified the chunk options as `{r, results='asis', echo=FALSE}`
+
+```{r, eval=FALSE}
+cat("# Summary as of", format(Sys.time(), "%a %b %d %X %Y"), "\n\n")
+cat("### Case count:", total_cases, "\n\n")
+cat("### Death count:", total_deaths, "\n\n")
+cat("### Cases Recovered:", total_rec, "\n\n")
+```
+
+### Interactive Tables
+
+Tables are always a useful way to display data, especially if you need to be able to filter by certain variables such as dates. In the chunk below we'll display our data in an interactive table that we can both search and filter using `reactable`.
+
+```{r,eval=FALSE}
+reactable(data = jhu_merge, 
+          bordered = TRUE, 
+          highlight = TRUE,
+          searchable =FALSE, 
+          striped = TRUE, 
+          fullWidth = TRUE, 
+          showPageSizeOptions = FALSE)
+```
+
+### Data Visualization
+
+We want to show the data that we've collected, which includes Covid data relating to three countries; the US, Tunisia and Australia. Using `plotly` we can make these plots interactive which makes them a lot more accessible as a communication tool.
+
+```{r,eval=FALSE}
+
+# Data for Tunisia
+data = jhu_long[grep('Tunisia', jhu_long$country), c(1:3)]
+plot_ly(data = data, mode = "lines", x= ~Date, y= ~count, color = ~country) %>%
+  layout(yaxis = list(title = "Number of Cases"))
+
+# Data for Australia
+data = jhu_long[grep('Australia', jhu_long$country), c(1:3)]
+plot_ly(data = data, mode = "lines", x= ~Date, y= ~count, color = ~country) %>%
+  layout(yaxis = list(title = "Number of Cases"))
+
+# Data for the US
+data = jhu_long[grep('US', jhu_long$country), c(1:3)]
+plot_ly(data = data, mode = "lines", x= ~Date, y= ~count, color = ~country) %>%
+  layout(yaxis = list(title = "Number of Cases"))
+```
+
+
+## Sharing the report
+
+Now that we have our RMarkdown file that contains all of our analysis and the report its self, we can focus on actually sending it, the script below uses the `gmailr` package to achieve this.
+
+To use `gmailr` I'd recommend opening a gmail account and download the Oauth credentials for it as a `JSON` file This will contain the authorization credentials to access your gmail account, so you don't want to hard code these into your RMarkdown file. I've named mine `mail.json`.
+
+The code in the following chunk can be saved as a simple R script and each time this script is run, your report will be compiled and sent automatically!
+
+```{r, eval=FALSE}
+# load packages
+requiredPackages <- c('gmailr', 'psych', 'datasets', 'rmarkdown')
+lapply(requiredPackages, require, character.only = TRUE)
+
+# knit your Rmarkdown file using render()
+render('YourReport.rmd', 'all')
+
+# confirm gmail OAuth credentials saved in the specified json file
+gm_auth_configure(path = 'mail.json')
+
+# write the email and add attachments
+my_email_message <- gm_mime() %>%
+  gm_to("exampleEmail@mail.com") %>%
+  gm_from('YourGmail@gmail.com') %>%
+  gm_subject("Data Report") %>%
+  gm_text_body(paste("Report as of.", Sys.Date(), sep = " ")) %>%
+  gm_attach_file("YourReport.html")
+
+# send the email
+gm_send_message(my_email_message)
+```
+
+
+# Conclusion
+
+In this tutorial, you've learned how to acquire data, automate report making and automate mail sending using R, I hope this has been useful for you! 
+
+[Here](https://jacksprojects.github.io/Pages/report.html) is a copy of the finished example report.
+
+
